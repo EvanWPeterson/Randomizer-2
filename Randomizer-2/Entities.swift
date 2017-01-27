@@ -11,20 +11,21 @@ import Foundation
 class Entities {
     
     fileprivate static let kPerson = "person"
-    fileprivate static let kGroup = "group"
+    //    fileprivate static let kGroup = "group"
     
     var person: String
     
+    //    group: String? = nil
     
-    init(person: String, group: String? = nil) {
+    init(person: String) {
         self.person = person
         
     }
     
-    convenience init?(dictionary: [String:Any]) {
+    init?(dictionary: [String:Any]) {
         guard let person = dictionary[Entities.kPerson] as? String else { return nil }
         
-        self.init(person: person)
+        self.person = person
     }
     
     var dictionaryRep: [String: String] {

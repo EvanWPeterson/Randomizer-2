@@ -25,40 +25,35 @@ class EntitiesTableViewController: UITableViewController {
     // MARK: - Table view data source
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "Group \(section + 1)"
+        return "Group \([section + 1][0])"
     }
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return (EntitiesController.shared.entities.count)/2
+        return (EntitiesController.shared.pairPeople.count)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if (EntitiesController.shared.entities.count % 2 != 0) {
-            return 2
-        } else {
-            return 2 
-        }
+        return EntitiesController.shared.pairPeople[section].count
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "personCell", for: indexPath)
         
-        let entity = EntitiesController.shared.entities[indexPath.row]
+        let entity = EntitiesController.shared.pairPeople[indexPath.section][indexPath.row]
         cell.textLabel?.text = entity.person
 
 
         return cell
     }
+    
+    func rando() {
+        EntitiesController.shared.entities.random()
+        tableView.reloadData()
+    }
  
     @IBAction func RandomizeButtonTapped(_ sender: Any) {
-   
-//        let array = [EntitiesController.shared.entities.count]
-//        let randomIndex = Int(arc4random_uniform(UInt32(array.count)))
-//        print(array[randomIndex])
-        let new = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: EntitiesController.shared.entities)
-        print(new)
-        EntitiesController.shared.random()
-        tableView.reloadData()
+        rando()
+
     }
         
     @IBAction func addButtonTapped(_ sender: Any) {
@@ -88,4 +83,10 @@ class EntitiesTableViewController: UITableViewController {
     
     }
 
+}
+
+extension Array {
+    mutating func random() {
+        for _ in 0..<10 { sort { (_,_) in arc4random() < arc4random() } }
+    }
 }

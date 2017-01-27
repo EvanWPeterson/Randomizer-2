@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import GameKit
 
 class EntitiesController {
     
@@ -16,14 +17,12 @@ class EntitiesController {
     
     var entities: [Entities] = []
     
-    init() {
-        loadToPersistent()
-        
+    var pairPeople: [[Entities]] {
+        return random(people: entities)
     }
     
-    func random() {
-        entities.random()
-        saveToPersistentStorage()
+    init() {
+        loadToPersistent()
         
     }
     
@@ -50,11 +49,15 @@ class EntitiesController {
         entities = entitiesDict.flatMap({Entities(dictionary: $0)})
         
     }
-    
-}
 
-extension Array {
-    mutating func random() {
-        for _ in 0..<10 { sort { (_,_) in arc4random() < arc4random() } }
+func random(people: [Entities]) -> [[Entities]] {
+    let randomGen = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: entities)
+    let splitSize = 2
+    let people = stride(from: 0, to: randomGen.count, by: splitSize).map {
+        Array(people[$0..<min($0 + splitSize, people.count)])
+    }
+    return people
     }
 }
+
+
